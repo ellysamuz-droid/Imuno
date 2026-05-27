@@ -496,8 +496,8 @@
             }
         }
 
-        // Form validation
-        form.addEventListener('submit', function(e) {
+        // Form validation with AJAX
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Clear previous messages
@@ -554,12 +554,58 @@
                 isValid = false;
             }
 
-            if (isValid) {
-                // Show success message and submit
-                showAlert('Pendaftaran berhasil! Anda akan diarahkan...', 'success');
-                setTimeout(() => {
-                    form.submit();
-                }, 1500);
+            if (!isValid) {
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sedang Mendaftar...';
+
+            try {
+                // Create FormData
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('tanggal_lahir', date);
+                formData.append('password', password);
+                formData.append('password_confirm', confirmInput.value);
+
+                // Send to server
+                const response = await fetch('prosesregistrasi.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show success message
+                    showAlert('Pendaftaran berhasil! Anda akan diarahkan ke dashboard...', 'success');
+                    
+                    // Redirect ke dashboard setelah 1.5 detik
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    // Show error message
+                    if (data.errors) {
+                        // Multiple errors
+                        for (let field in data.errors) {
+                            showError(field, data.errors[field]);
+                        }
+                    } else {
+                        // Single error message
+                        showAlert(data.message, 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Terjadi kesalahan saat mendaftar. Silakan coba lagi.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Daftar Sekarang';
             }
         });
 

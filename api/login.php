@@ -409,22 +409,25 @@
         </div>
 
         <div class="login-right">
-            <form class="login-form-container" action="proseslogin.php" method="POST">
+            <form class="login-form-container" id="loginForm">
                 <div class="form-header">
                     <h1>Masuk</h1>
                     <p>Gunakan akun Anda untuk melanjutkan</p>
                 </div>
 
                 <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
 
                 <div class="form-group">
                     <label for="email">Alamat Email</label>
                     <input type="email" id="email" name="email" placeholder="nama@email.com" required>
+                    <div class="error-text" id="emailError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Kata Sandi</label>
                     <input type="password" id="password" name="password" placeholder="Minimal 6 karakter" required>
+                    <div class="error-text" id="passwordError"></div>
                 </div>
 
                 <div class="form-footer">
@@ -435,7 +438,7 @@
                     <a href="forgot-password.html" class="forgot-password">Lupa kata sandi?</a>
                 </div>
 
-                <button type="submit" class="btn-login">Masuk</button>
+                <button type="submit" class="btn-login" id="submitBtn">Masuk</button>
 
                 <div class="signup-link">
                     Belum punya akun? <a href="register.html">Daftar sekarang</a>
@@ -447,44 +450,118 @@
     <script>
         const form = document.querySelector('.login-form-container');
         const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const submitBtn = document.getElementById('submitBtn');
 
-        form.addEventListener('submit', function(e) {
-            // Remove previous error messages
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Reset messages
             errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+            clearErrors();
 
-            // Basic validation
+            // Get form data
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (!email) {
-                showError('Silakan masukkan email Anda');
-                e.preventDefault();
-                return;
-            }
+            // Validasi client-side
+            let isValid = true;
 
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showError('Format email tidak valid');
-                e.preventDefault();
-                return;
+            if (!email) {
+                showError('email', 'Email harus diisi');
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('email', 'Format email tidak valid');
+                isValid = false;
             }
 
             if (!password) {
-                showError('Silakan masukkan kata sandi Anda');
-                e.preventDefault();
+                showError('password', 'Password harus diisi');
+                isValid = false;
+            }
+
+            if (!isValid) {
                 return;
             }
 
-            if (password.length < 6) {
-                showError('Kata sandi minimal 6 karakter');
-                e.preventDefault();
-                return;
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sedang memproses...';
+
+            try {
+                // Create FormData
+                const formData = new FormData();
+                formData.append('email', email);
+                formData.append('password', password);
+
+                // Send to server
+                const response = await fetch('proseslogin.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show success message
+                    showSuccess('Login berhasil! Anda akan diarahkan ke dashboard...');
+                    
+                    // Redirect ke dashboard setelah 1.5 detik
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    // Show error message
+                    if (data.errors) {
+                        // Multiple errors
+                        for (let field in data.errors) {
+                            showError(field, data.errors[field]);
+                        }
+                    } else {
+                        // Single error message
+                        showError('general', data.message);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('general', 'Terjadi kesalahan saat login. Silakan coba lagi.');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Masuk';
             }
         });
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add('show');
-            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        function showError(fieldId, message) {
+            if (fieldId === 'general') {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                const errorElement = document.getElementById(fieldId + 'Error');
+                const inputElement = document.getElementById(fieldId);
+                if (errorElement && inputElement) {
+                    errorElement.textContent = message;
+                    errorElement.classList.add('show');
+                    inputElement.classList.add('input-error');
+                }
+            }
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-text').forEach(el => {
+                el.classList.remove('show');
+            });
+            document.querySelectorAll('input').forEach(el => {
+                el.classList.remove('input-error');
+            });
         }
 
         // Real-time validation
