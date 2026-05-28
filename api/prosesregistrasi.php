@@ -88,7 +88,7 @@ $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Insert user ke database
 $insert_user = $conn->prepare("INSERT INTO users (username, email, password, tanggal_lahir, role) VALUES (?, ?, ?, ?, ?)");
-$role = 'orang_tua'; // Role default
+$role = 'user'; // Role default
 
 $insert_user->bind_param("sssss", $username, $email, $hashed_password, $tanggal_lahir, $role);
 
