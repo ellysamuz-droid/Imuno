@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Ambil data dari request
-$username = sanitize_input($_POST['username'] ?? '');
-$email = sanitize_input($_POST['email'] ?? '');
-$tanggal_lahir = sanitize_input($_POST['tanggal_lahir'] ?? '');
+$username = $_POST['username'] ?? '';
+$email = $_POST['email'] ?? '';
+$tanggal_lahir = $_POST['tanggal_lahir'] ?? '';
 $password = $_POST['password'] ?? ''; // Jangan sanitize password
 $password_confirm = $_POST['password_confirm'] ?? '';
 
