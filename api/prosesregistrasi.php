@@ -87,10 +87,10 @@ if ($check_email->num_rows > 0) {
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Insert user ke database
-$insert_user = $conn->prepare("INSERT INTO users (username, email, password, tanggal_lahir, role) VALUES (?, ?, ?, ?, ?)");
-$role = 'user'; // Role default
+$insert_user = $conn->prepare("INSERT INTO users (username, email, password, tanggal_lahir, role) VALUES (?, ?, ?, ?, 'user')");
 
-$insert_user->bind_param("sssss", $username, $email, $hashed_password, $tanggal_lahir, $role);
+
+$insert_user->bind_param("ssss", $username, $email, $hashed_password, $tanggal_lahir);
 
 if ($insert_user->execute()) {
     $user_id = $insert_user->insert_id;
