@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require 'koneksi.php';
+require 'config.php';
 
 // Cek cookie auth
 if (!isset($_COOKIE['auth_token'])) {

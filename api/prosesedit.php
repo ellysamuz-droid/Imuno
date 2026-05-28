@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require __DIR__ . '/koneksi.php';
+require __DIR__ . '/config.php';
 
 // Cek cookie auth
 if (!isset($_COOKIE['auth_token'])) {
