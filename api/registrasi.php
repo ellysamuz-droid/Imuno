@@ -579,9 +579,9 @@
 
                 const data = await response.json();
 
-                if (data.success) {
+                if (response.ok && data.success) {
                     // Show success message
-                    showAlert('Pendaftaran berhasil! Anda akan diarahkan ke dashboard...', 'success');
+                    showAlert('Pendaftaran berhasil! Anda akan diarahkan ke login...', 'success');
                     
                     // Redirect ke dashboard setelah 1.5 detik
                     setTimeout(() => {
@@ -596,12 +596,12 @@
                         }
                     } else {
                         // Single error message
-                        showAlert(data.message, 'error');
+                        showAlert(data.message || 'Terjadi kesalahan saat mendaftar.', 'error');
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('Terjadi kesalahan saat mendaftar. Silakan coba lagi.', 'error');
+                showAlert('Gagal memproses data. Silakan coba lagi.', 'error');
             } finally {
                 // Reset button state
                 submitBtn.disabled = false;
