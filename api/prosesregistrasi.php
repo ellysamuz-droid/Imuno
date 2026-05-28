@@ -87,7 +87,7 @@ if ($check_email->num_rows > 0) {
 $hashed_password = hash_password($password);
 
 // Insert user ke database
-$insert_user = $conn->prepare("INSERT INTO users (nama, email, password, tanggal_lahir, role) VALUES (?, ?, ?, ?, ?)");
+$insert_user = $conn->prepare("INSERT INTO users (username, email, password, tanggal_lahir, role) VALUES (?, ?, ?, ?, ?)");
 $role = 'orang_tua'; // Role default
 
 $insert_user->bind_param("sssss", $username, $email, $hashed_password, $tanggal_lahir, $role);
@@ -105,7 +105,7 @@ if ($insert_user->execute()) {
         'message' => 'Registrasi berhasil! Anda akan diarahkan ke dashboard...',
         'user' => [
             'id' => $user_id,
-            'nama' => $username,
+            'username' => $username,
             'email' => $email,
             'role' => $role
         ]
