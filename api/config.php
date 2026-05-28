@@ -13,7 +13,7 @@ class Database
 
     private function __construct()
     {
-        // Ambil dari Environment Variables (Vercel), jika kosong gunakan hardcode fallback
+        // Ambil dari Environment Variables (Vercel), jika kosong gunakan fallback
         $this->host = $_ENV['TIDB_HOST'] ?? getenv('TIDB_HOST') ?: 'gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com';
         $this->port = (int)($_ENV['TIDB_PORT'] ?? getenv('TIDB_PORT') ?: 4000);
         $this->user = $_ENV['TIDB_USER'] ?? getenv('TIDB_USER') ?: '4E4R7ePMi5xj2AM.root';
@@ -48,7 +48,8 @@ class Database
 
         if ($mysqli->connect_errno) {
             throw new RuntimeException(
-                'Koneksi ke TiDB Cloud gagal: ' . $mysqli->connect_error
+                'Koneksi ke TiDB Cloud gagal: ' . $mysqli->connect_error . 
+                ' (Host: ' . $this->host . ':' . $this->port . ')'
             );
         }
 
@@ -63,28 +64,38 @@ class Database
 
     public function query(string $sql, string $types = '', array $params = []): array
     {
-        $stmt   = $this->prepare($sql, $types, $params);
-        $result = $stmt->get_result();
+        try {
+            $stmt   = $this->prepare($sql, $types, $params);
+            $result = $stmt->get_result();
 
-        if ($result === false) {
-            throw new RuntimeException('Gagal mengambil result: ' . $stmt->error);
+            if ($result === false) {
+                throw new RuntimeException('Gagal mengambil result: ' . $stmt->error);
+            }
+
+            $rows = [];
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            $stmt->close();
+            return $rows;
+        } catch (Exception $e) {
+            error_log('Database Query Error: ' . $e->getMessage() . ' | SQL: ' . $sql);
+            throw $e;
         }
-
-        $rows = [];
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
-        }
-
-        $stmt->close();
-        return $rows;
     }
 
     public function execute(string $sql, string $types = '', array $params = []): int
     {
-        $stmt         = $this->prepare($sql, $types, $params);
-        $affectedRows = $stmt->affected_rows;
-        $stmt->close();
-        return $affectedRows;
+        try {
+            $stmt         = $this->prepare($sql, $types, $params);
+            $affectedRows = $stmt->affected_rows;
+            $stmt->close();
+            return $affectedRows;
+        } catch (Exception $e) {
+            error_log('Database Execute Error: ' . $e->getMessage() . ' | SQL: ' . $sql);
+            throw $e;
+        }
     }
 
     public function lastInsertId(): int
@@ -112,11 +123,13 @@ class Database
         $stmt = $this->connection->prepare($sql);
 
         if ($stmt === false) {
-            throw new RuntimeException('Prepare gagal: ' . $this->connection->error);
+            throw new RuntimeException('Prepare gagal: ' . $this->connection->error . ' | SQL: ' . $sql);
         }
 
         if ($types !== '' && count($params) > 0) {
-            $stmt->bind_param($types, ...$params);
+            if (!$stmt->bind_param($types, ...$params)) {
+                throw new RuntimeException('Bind param gagal: ' . $stmt->error);
+            }
         }
 
         if (!$stmt->execute()) {
@@ -128,7 +141,9 @@ class Database
 
     public function close(): void
     {
-        $this->connection->close();
+        if ($this->connection) {
+            $this->connection->close();
+        }
         self::$instance = null;
     }
 
@@ -140,17 +155,32 @@ class Database
     }
 }
 
-// 🛑 BAGIAN TAMBAHAN PENTING AGAR TIDAK ERROR "Undefined variable $conn"
-// Kode di bawah ini otomatis membuat variabel $conn agar bisa langsung dipakai di file lain
+// ============================================
+// INISIALISASI KONEKSI DATABASE
+// ============================================
 try {
     $dbInstance = Database::getInstance();
     $conn = $dbInstance->getConnection(); 
+    
+    // Log success connection
+    error_log('✅ Database connection successful');
+    
 } catch (Exception $e) {
-    // Jika koneksi gagal, langsung keluarkan JSON error agar JavaScript tidak crash
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Gagal terhubung ke database TiDB: ' . $e->getMessage()
-    ]);
-    exit();
+    // Log error
+    error_log('❌ Database connection failed: ' . $e->getMessage());
+    
+    // Jika ini dari API request, kirim JSON error
+    if (strpos($_SERVER['REQUEST_URI'], '.php') !== false && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Gagal terhubung ke database: ' . $e->getMessage()
+        ]);
+        exit();
+    }
+    
+    // Jika ini halaman view, tampilkan error
+    die('❌ Koneksi Database Gagal: ' . $e->getMessage());
 }
+?>
