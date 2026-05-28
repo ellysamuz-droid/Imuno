@@ -13,7 +13,7 @@ class Database
 
     private function __construct()
     {
-        // ✅ Pakai $_ENV dulu, fallback ke getenv(), fallback ke hardcode
+        // Ambil dari Environment Variables (Vercel), jika kosong gunakan hardcode fallback
         $this->host = $_ENV['TIDB_HOST'] ?? getenv('TIDB_HOST') ?: 'gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com';
         $this->port = (int)($_ENV['TIDB_PORT'] ?? getenv('TIDB_PORT') ?: 4000);
         $this->user = $_ENV['TIDB_USER'] ?? getenv('TIDB_USER') ?: '4E4R7ePMi5xj2AM.root';
@@ -35,6 +35,7 @@ class Database
     {
         $mysqli = new mysqli();
 
+        // Menggunakan SSL karena TiDB Cloud mewajibkannya
         $mysqli->real_connect(
             $this->host,
             $this->user,
@@ -137,4 +138,19 @@ class Database
     {
         throw new RuntimeException('Singleton tidak bisa di-unserialize.');
     }
+}
+
+// 🛑 BAGIAN TAMBAHAN PENTING AGAR TIDAK ERROR "Undefined variable $conn"
+// Kode di bawah ini otomatis membuat variabel $conn agar bisa langsung dipakai di file lain
+try {
+    $dbInstance = Database::getInstance();
+    $conn = $dbInstance->getConnection(); 
+} catch (Exception $e) {
+    // Jika koneksi gagal, langsung keluarkan JSON error agar JavaScript tidak crash
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Gagal terhubung ke database TiDB: ' . $e->getMessage()
+    ]);
+    exit();
 }
