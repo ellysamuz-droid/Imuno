@@ -585,7 +585,7 @@
                     
                     // Redirect ke dashboard setelah 1.5 detik
                     setTimeout(() => {
-                        window.location.href = 'dashboard.php';
+                        window.location.href = 'login.php';
                     }, 1500);
                 } else {
                     // Show error message
