@@ -435,13 +435,13 @@
                         <input type="checkbox" name="remember">
                         <span>Ingat saya</span>
                     </label>
-                    <a href="forgot-password.html" class="forgot-password">Lupa kata sandi?</a>
+                    <a href="forgot-password.php" class="forgot-password">Lupa kata sandi?</a>
                 </div>
 
                 <button type="submit" class="btn-login" id="submitBtn">Masuk</button>
 
                 <div class="signup-link">
-                    Belum punya akun? <a href="register.html">Daftar sekarang</a>
+                    Belum punya akun? <a href="registrasi.php">Daftar sekarang</a>
                 </div>
             </form>
         </div>
@@ -509,7 +509,7 @@
                     
                     // Redirect ke dashboard setelah 1.5 detik
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'dashboard.php';
                     }, 1500);
                 } else {
                     // Show error message

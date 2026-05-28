@@ -434,7 +434,7 @@
                 <button type="submit" class="btn-register" id="submitBtn">Daftar Sekarang</button>
 
                 <div class="login-link">
-                    Sudah punya akun? <a href="login.html">Masuk di sini</a>
+                    Sudah punya akun? <a href="login.php">Masuk di sini</a>
                 </div>
             </form>
         </div>
@@ -585,7 +585,7 @@
                     
                     // Redirect ke dashboard setelah 1.5 detik
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'dashboard.php';
                     }, 1500);
                 } else {
                     // Show error message
