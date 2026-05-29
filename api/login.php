@@ -33,7 +33,6 @@
             overflow: hidden;
         }
 
-        /* Background decorations */
         .decoration {
             position: absolute;
             border-radius: 50%;
@@ -227,6 +226,21 @@
             color: #ccc;
         }
 
+        .form-group input.input-error {
+            border-color: var(--error);
+        }
+
+        .error-text {
+            color: var(--error);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-text.show {
+            display: block;
+        }
+
         .form-footer {
             display: flex;
             justify-content: space-between;
@@ -292,13 +306,14 @@
             left: 100%;
         }
 
-        .btn-login:hover {
+        .btn-login:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 15px 40px rgba(232, 93, 111, 0.4);
         }
 
-        .btn-login:active {
-            transform: translateY(0);
+        .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .signup-link {
@@ -318,20 +333,29 @@
             color: #D94560;
         }
 
-        .error-message {
-            display: none;
-            background: #FEE;
-            color: var(--error);
-            padding: 12px 16px;
-            border-radius: 8px;
+        .alert {
+            padding: 14px 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
             font-size: 14px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .alert.error {
+            background: #FFEBEE;
+            color: var(--error);
             border-left: 4px solid var(--error);
         }
 
-        .error-message.show {
-            display: block;
-            animation: slideDown 0.3s ease-out;
+        .alert.success {
+            background: #E8F5E9;
+            color: var(--success);
+            border-left: 4px solid var(--success);
         }
 
         @keyframes slideDown {
@@ -409,24 +433,35 @@
         </div>
 
         <div class="login-right">
-            <form class="login-form-container" id="loginForm">
+            <form class="login-form-container" id="loginForm" novalidate>
                 <div class="form-header">
                     <h1>Masuk</h1>
                     <p>Gunakan akun Anda untuk melanjutkan</p>
                 </div>
 
-                <div class="error-message" id="errorMessage"></div>
-                <div class="success-message" id="successMessage"></div>
+                <div class="alert" id="alertMessage"></div>
 
                 <div class="form-group">
                     <label for="email">Alamat Email</label>
-                    <input type="email" id="email" name="email" placeholder="nama@email.com" required>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="nama@email.com" 
+                        required
+                    >
                     <div class="error-text" id="emailError"></div>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Kata Sandi</label>
-                    <input type="password" id="password" name="password" placeholder="Minimal 6 karakter" required>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Masukkan kata sandi Anda" 
+                        required
+                    >
                     <div class="error-text" id="passwordError"></div>
                 </div>
 
@@ -435,7 +470,7 @@
                         <input type="checkbox" name="remember">
                         <span>Ingat saya</span>
                     </label>
-                    <a href="forgot-password.php" class="forgot-password">Lupa kata sandi?</a>
+                    <a href="#" class="forgot-password">Lupa kata sandi?</a>
                 </div>
 
                 <button type="submit" class="btn-login" id="submitBtn">Masuk</button>
@@ -448,22 +483,21 @@
     </div>
 
     <script>
-        const form = document.querySelector('.login-form-container');
-        const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
+        const form = document.getElementById('loginForm');
+        const alertMessage = document.getElementById('alertMessage');
         const submitBtn = document.getElementById('submitBtn');
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-
-            // Reset messages
-            errorMessage.classList.remove('show');
-            successMessage.classList.remove('show');
+            
+            // Clear previous messages
+            alertMessage.classList.remove('show');
             clearErrors();
 
             // Get form data
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const remember = document.querySelector('input[name="remember"]').checked;
 
             // Validasi client-side
             let isValid = true;
@@ -494,6 +528,9 @@
                 const formData = new FormData();
                 formData.append('email', email);
                 formData.append('password', password);
+                if (remember) {
+                    formData.append('remember', '1');
+                }
 
                 // Send to server
                 const response = await fetch('proseslogin.php', {
@@ -503,13 +540,13 @@
 
                 const data = await response.json();
 
-                if (data.success) {
+                if (response.ok && data.success) {
                     // Show success message
-                    showSuccess('Login berhasil! Anda akan diarahkan ke dashboard...');
+                    showAlert('Login berhasil! Anda akan diarahkan...', 'success');
                     
-                    // Redirect ke dashboard setelah 1.5 detik
+                    // Redirect ke dashboard sesuai role
                     setTimeout(() => {
-                        window.location.href = 'dashboard.php';
+                        window.location.href = data.redirect || 'dashboard.php';
                     }, 1500);
                 } else {
                     // Show error message
@@ -520,12 +557,12 @@
                         }
                     } else {
                         // Single error message
-                        showError('general', data.message);
+                        showAlert(data.message || 'Login gagal. Silakan coba lagi.', 'error');
                     }
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showError('general', 'Terjadi kesalahan saat login. Silakan coba lagi.');
+                showAlert('Terjadi kesalahan. Silakan coba lagi.', 'error');
             } finally {
                 // Reset button state
                 submitBtn.disabled = false;
@@ -534,25 +571,18 @@
         });
 
         function showError(fieldId, message) {
-            if (fieldId === 'general') {
-                errorMessage.textContent = message;
-                errorMessage.classList.add('show');
-                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            } else {
-                const errorElement = document.getElementById(fieldId + 'Error');
-                const inputElement = document.getElementById(fieldId);
-                if (errorElement && inputElement) {
-                    errorElement.textContent = message;
-                    errorElement.classList.add('show');
-                    inputElement.classList.add('input-error');
-                }
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+                inputElement.classList.add('input-error');
             }
         }
 
-        function showSuccess(message) {
-            successMessage.textContent = message;
-            successMessage.classList.add('show');
-            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        function showAlert(message, type) {
+            alertMessage.textContent = message;
+            alertMessage.className = 'alert show ' + type;
         }
 
         function clearErrors() {
@@ -563,15 +593,6 @@
                 el.classList.remove('input-error');
             });
         }
-
-        // Real-time validation
-        document.getElementById('email').addEventListener('change', function() {
-            if (this.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)) {
-                this.style.borderColor = 'var(--error)';
-            } else {
-                this.style.borderColor = '#e0e0e0';
-            }
-        });
     </script>
 </body>
 </html>

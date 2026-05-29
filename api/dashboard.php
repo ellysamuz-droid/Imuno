@@ -1,35 +1,35 @@
 <?php
 /**
- * Dashboard
- * Halaman utama setelah login
- * Hanya dapat diakses oleh user yang sudah login
+ * DASHBOARD.PHP
+ * Halaman dashboard user (role: user)
+ * Hanya bisa diakses oleh user yang sudah login
  */
 
-// Include config
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 
-// Check if user is logged in
+// Require user harus login
 require_login();
 
-// Get current user data dari cookie
+// Get current user info
 $user_id = get_user_id();
-$user_email = get_user_email();
 $user_role = get_user_role();
 
-// Get user full data dari database
-$query = $conn->prepare("SELECT id, nama, email, role FROM users WHERE id = ?");
-$query->bind_param("i", $user_id);
-$query->execute();
-$result = $query->get_result();
-$user = $result->fetch_assoc();
+// Jika user adalah admin, redirect ke dashboardadmin.php
+if ($user_role === 'admin') {
+    header('Location: dashboardadmin.php');
+    exit();
+}
 
-if (!$user) {
-    // User tidak ditemukan, logout
+// Get user data lengkap dari database
+$user_data = get_user_data($user_id);
+
+if (!$user_data) {
+    // User tidak ditemukan di database, logout
     logout();
 }
 
-$user_name = $user['nama'];
-$user_email = $user['email'];
+$username = htmlspecialchars($user_data['username']);
+$email = htmlspecialchars($user_data['email']);
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +52,7 @@ $user_email = $user['email'];
         }
 
         .navbar {
-            background: linear-gradient(135deg, #FF9BA5 0%, #FFB3BA 100%);
+            background: linear-gradient(135deg, #E85D6F 0%, #D94560 100%);
             padding: 20px 40px;
             color: white;
             display: flex;
@@ -63,6 +63,9 @@ $user_email = $user['email'];
 
         .navbar h1 {
             font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .user-info {
@@ -80,9 +83,13 @@ $user_email = $user['email'];
             font-size: 14px;
         }
 
+        .user-data strong {
+            font-size: 15px;
+        }
+
         .logout-btn {
             background: white;
-            color: #FF9BA5;
+            color: #E85D6F;
             border: none;
             padding: 10px 20px;
             border-radius: 20px;
@@ -123,7 +130,7 @@ $user_email = $user['email'];
         }
 
         .welcome-section h2 {
-            color: #FF9BA5;
+            color: #E85D6F;
             margin-bottom: 15px;
             font-size: 32px;
         }
@@ -148,6 +155,7 @@ $user_email = $user['email'];
             transition: all 0.3s;
             cursor: pointer;
             animation: slideUp 0.6s ease-out;
+            border-left: 4px solid #E85D6F;
         }
 
         .card:hover {
@@ -172,9 +180,18 @@ $user_email = $user['email'];
             line-height: 1.5;
         }
 
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(1) { animation-delay: 0.1s; border-left-color: #E85D6F; }
+        .card:nth-child(2) { animation-delay: 0.2s; border-left-color: #78B7B7; }
+        .card:nth-child(3) { animation-delay: 0.3s; border-left-color: #FFD89B; }
+
+        .status-info {
+            background: linear-gradient(135deg, #E8F5E9 0%, #D4EDD7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: #2d5a3d;
+            font-size: 14px;
+        }
 
         @media (max-width: 768px) {
             .navbar {
@@ -185,6 +202,10 @@ $user_email = $user['email'];
             .user-info {
                 width: 100%;
                 justify-content: space-between;
+            }
+
+            .container {
+                padding: 20px;
             }
 
             .welcome-section {
@@ -203,8 +224,8 @@ $user_email = $user['email'];
         <h1>💉 Reminder Imunisasi</h1>
         <div class="user-info">
             <div class="user-data">
-                <p><strong><?php echo htmlspecialchars($user_name); ?></strong></p>
-                <p><?php echo htmlspecialchars($user_email); ?></p>
+                <p><strong><?php echo $username; ?></strong></p>
+                <p><?php echo $email; ?></p>
             </div>
             <a href="logout.php" class="logout-btn">Logout</a>
         </div>
@@ -212,27 +233,32 @@ $user_email = $user['email'];
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Status Info -->
+        <div class="status-info">
+            ✅ Anda login sebagai <strong>User Biasa</strong> | Role: <strong><?php echo htmlspecialchars($user_role); ?></strong>
+        </div>
+
         <!-- Welcome Section -->
         <div class="welcome-section">
-            <h2>Selamat Datang, <?php echo htmlspecialchars($user_name); ?>! 👋</h2>
+            <h2>Selamat Datang, <?php echo $username; ?>! 👋</h2>
             <p>Anda berhasil login ke sistem Reminder Imunisasi. Di sini Anda dapat mengelola jadwal imunisasi buah hati dengan mudah dan aman.</p>
         </div>
 
         <!-- Dashboard Cards -->
         <div class="dashboard-grid">
-            <div class="card">
+            <div class="card" onclick="alert('Fitur sedang dalam pengembangan')">
                 <div class="card-icon">👶</div>
                 <h3>Data Anak</h3>
                 <p>Tambah dan kelola data anak Anda dalam sistem</p>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="alert('Fitur sedang dalam pengembangan')">
                 <div class="card-icon">📅</div>
                 <h3>Jadwal Imunisasi</h3>
                 <p>Lihat dan pantau jadwal imunisasi yang akan datang</p>
             </div>
 
-            <div class="card">
+            <div class="card" onclick="alert('Fitur sedang dalam pengembangan')">
                 <div class="card-icon">📋</div>
                 <h3>Riwayat Imunisasi</h3>
                 <p>Cek riwayat lengkap imunisasi yang sudah dilakukan</p>
@@ -241,25 +267,8 @@ $user_email = $user['email'];
     </div>
 
     <script>
-        // Simple dashboard functionality
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', function() {
-                const title = this.querySelector('h3').textContent;
-                alert('Fitur "' + title + '" sedang dalam pengembangan');
-            });
-        });
-
-        // Check session periodically (optional)
-        // setInterval(() => {
-        //     // Check if user still logged in
-        //     fetch('check_session.php')
-        //         .then(r => r.json())
-        //         .then(data => {
-        //             if (!data.logged_in) {
-        //                 window.location.href = 'login.html';
-        //             }
-        //         });
-        // }, 5 * 60 * 1000); // Check every 5 minutes
+        // Log activity (optional - bisa diubah menjadi fetch ke server)
+        console.log('Dashboard loaded for user: <?php echo $username; ?>');
     </script>
 </body>
 </html>

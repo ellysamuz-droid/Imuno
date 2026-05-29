@@ -1,16 +1,19 @@
 <?php
 /**
- * Logout Process
- * File ini menangani proses logout user
+ * LOGOUT.PHP
+ * Menghapus session dan redirect ke login page
  */
 
-// Include config
-require_once 'config.php';
+require_once __DIR__ . '/config.php';
 
-// Call logout function
+// Log activity sebelum logout
+if (is_logged_in()) {
+    log_activity(get_user_id(), 'LOGOUT', 'User logout');
+}
+
+// Logout user
 logout();
 
-// Jika logout() tidak redirect, redirect manual
-header("Location: /");
-exit();
+// Fungsi logout() sudah handle redirect ke login.php
+// Jadi kode di bawah tidak akan dieksekusi
 ?>

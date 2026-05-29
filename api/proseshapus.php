@@ -1,42 +1,74 @@
 <?php
-ob_start();
-require 'config.php';
+/**
+ * PROSESHAPUS.PHP
+ * Handle delete user dengan validasi
+ */
 
-// Cek cookie auth
-if (!isset($_COOKIE['auth_token'])) {
-    header("Location: /api/loginForm.php");
-    exit();
-}
+header('Content-Type: application/json');
 
-$tokenData = explode('|', base64_decode($_COOKIE['auth_token']));
-$userRole  = $tokenData[1] ?? null;
-
-if ($userRole != 'admin') {
-    header("Location: /api/loginForm.php");
-    exit();
-}
-
-// Cek apakah id tersedia
-if (empty($_GET['id'])) {
-    header("Location: /api/dashboardadmin.php");
-    exit();
-}
-
-$id = (int) $_GET['id'];
+require_once __DIR__ . '/config.php';
+require_admin();
 
 try {
-    $db = Database::getInstance();
+    // Get user ID dari GET
+    $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-    $db->execute(
-        "DELETE FROM pengguna WHERE id = ?",
-        'i',
-        [$id]
-    );
+    if ($user_id <= 0) {
+        throw new Exception('User ID tidak valid');
+    }
 
-    header("Location: /api/dashboardadmin.php");
-    exit();
+    // Validasi user exists
+    $check_stmt = $conn->prepare("SELECT id FROM users WHERE id = ?");
+    $check_stmt->bind_param("i", $user_id);
+    $check_stmt->execute();
+    $result = $check_stmt->get_result();
 
-} catch (RuntimeException $e) {
-    echo "Gagal menghapus data: " . $e->getMessage();
+    if ($result->num_rows === 0) {
+        throw new Exception('User tidak ditemukan');
+    }
+    $check_stmt->close();
+
+    // Prevent deleting own account
+    if ($user_id === get_user_id()) {
+        throw new Exception('Anda tidak bisa menghapus akun Anda sendiri!');
+    }
+
+    // Delete user
+    $delete_stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    $delete_stmt->bind_param("i", $user_id);
+
+    if ($delete_stmt->execute()) {
+        // Log activity
+        log_activity(get_user_id(), 'DELETE_USER', 'Delete user ID: ' . $user_id);
+        
+        // If AJAX request
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            echo json_encode([
+                'success' => true,
+                'message' => 'User berhasil dihapus'
+            ]);
+        } else {
+            // Regular form submit
+            header('Location: dashboardadmin.php?deleted=1');
+        }
+    } else {
+        throw new Exception('Gagal menghapus user: ' . $delete_stmt->error);
+    }
+    $delete_stmt->close();
+
+} catch (Exception $e) {
+    error_log('Delete User Error: ' . $e->getMessage());
+    
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    } else {
+        header('Location: dashboardadmin.php?error=' . urlencode($e->getMessage()));
+    }
 }
+
+$conn->close();
 ?>
