@@ -5,8 +5,7 @@
  * Updated: Session-based auth, error handling, validation
  */
 
-// Start session
-session_start();
+
 
 // Include config dengan helper functions
 require_once __DIR__ . '/config.php';
@@ -88,7 +87,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Reminder Imunisasi</title>
+    <title>Dashboard Admin - Imuno</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -530,6 +529,21 @@ try {
                 <div class="user-avatar"><?php echo strtoupper(substr($user_data['username'], 0, 1)); ?></div>
             </div>
         </div>
+
+        <!-- NOTIFIKASI -->
+        <?php if (!empty($_GET['success'])): ?>
+        <div style="background: rgba(46,204,113,0.15); color: #27ae60; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #27ae60; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle"></i>
+            <?php echo htmlspecialchars($_GET['success']); ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($_GET['deleted'])): ?>
+        <div style="background: rgba(231,76,60,0.1); color: #e74c3c; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #e74c3c; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-trash-alt"></i>
+            User berhasil dihapus.
+        </div>
+        <?php endif; ?>
 
         <!-- STATISTICS -->
         <div class="stats-container">

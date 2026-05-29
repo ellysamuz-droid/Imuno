@@ -37,7 +37,7 @@ $email = htmlspecialchars($user_data['email']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Reminder Imunisasi</title>
+    <title>Dashboard - Imuno</title>
     <style>
         * {
             margin: 0;
@@ -221,7 +221,7 @@ $email = htmlspecialchars($user_data['email']);
 <body>
     <!-- Navbar -->
     <div class="navbar">
-        <h1>💉 Reminder Imunisasi</h1>
+        <h1>💉 Imuno</h1>
         <div class="user-info">
             <div class="user-data">
                 <p><strong><?php echo $username; ?></strong></p>
@@ -241,7 +241,7 @@ $email = htmlspecialchars($user_data['email']);
         <!-- Welcome Section -->
         <div class="welcome-section">
             <h2>Selamat Datang, <?php echo $username; ?>! 👋</h2>
-            <p>Anda berhasil login ke sistem Reminder Imunisasi. Di sini Anda dapat mengelola jadwal imunisasi buah hati dengan mudah dan aman.</p>
+            <p>Anda berhasil login ke sistem Imuno. Di sini Anda dapat mengelola jadwal imunisasi buah hati dengan mudah dan aman.</p>
         </div>
 
         <!-- Dashboard Cards -->

@@ -93,17 +93,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($update_stmt->execute()) {
-            $success = 'User berhasil diupdate!';
-            // Refresh data
-            $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $user = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
+            $update_stmt->close();
+            header('Location: dashboardadmin.php?success=User+berhasil+diupdate');
+            exit();
         } else {
             $error = 'Gagal mengupdate user: ' . $update_stmt->error;
+            $update_stmt->close();
         }
-        $update_stmt->close();
     }
 }
 ?>
