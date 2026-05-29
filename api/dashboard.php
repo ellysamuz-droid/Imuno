@@ -14,11 +14,8 @@ require_login();
 $user_id = get_user_id();
 $user_role = get_user_role();
 
-// Jika user adalah admin, redirect ke dashboardadmin.php
-if ($user_role === 'admin') {
-    header('Location: dashboardadmin.php');
-    exit();
-}
+// Tambahkan link balik ke dashboardadmin jika user adalah admin
+$is_admin = ($user_role === 'admin');
 
 // Get user data lengkap dari database
 $user_data = get_user_data($user_id);
@@ -223,6 +220,20 @@ $email = htmlspecialchars($user_data['email']);
     <div class="navbar">
         <h1>💉 Imuno</h1>
         <div class="user-info">
+            
+            <?php if ($is_admin): ?>
+            <a href="dashboardadmin.php" style="
+                background: white;
+                color: #E85D6F;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 20px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s;
+            ">← Admin Panel</a>
+            <?php endif; ?>
+
             <div class="user-data">
                 <p><strong><?php echo $username; ?></strong></p>
                 <p><?php echo $email; ?></p>
