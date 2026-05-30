@@ -220,7 +220,7 @@ $email = htmlspecialchars($user_data['email']);
     <div class="navbar">
         <h1>💉 Imuno</h1>
         <div class="user-info">
-            
+
             <?php if ($is_admin): ?>
             <a href="dashboardadmin.php" style="
                 background: white;
@@ -257,7 +257,7 @@ $email = htmlspecialchars($user_data['email']);
 
         <!-- Dashboard Cards -->
         <div class="dashboard-grid">
-            <div class="card" onclick="alert('Fitur sedang dalam pengembangan')">
+            <div class="card" onclick="window.location.href='data_anak.php'" style="cursor:pointer;">
                 <div class="card-icon">👶</div>
                 <h3>Data Anak</h3>
                 <p>Tambah dan kelola data anak Anda dalam sistem</p>
