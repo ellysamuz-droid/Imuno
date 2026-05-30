@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFE5E9 0%, #E8F5F7 100%);
             min-height: 100vh;
             padding: 40px 20px;
         }
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .form-header h2 {
             font-weight: bold;
-            color: #667eea;
+            color: #E85D6F;
         }
 
         .form-group {
@@ -139,8 +139,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #E85D6F;
+            box-shadow: 0 0 0 3px rgba(232, 93, 111, 0.1);
         }
 
         .error-message {
@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-submit {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #E85D6F, #D94560);
             color: white;
             border: none;
             border-radius: 8px;
@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-back {
             display: inline-block;
             margin-top: 15px;
-            color: #667eea;
+            color: #E85D6F;
             text-decoration: none;
             font-weight: 600;
         }

@@ -114,16 +114,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFE5E9 0%, #E8F5F7 100%);
             min-height: 100vh;
             padding: 40px 20px;
         }
 
         .form-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            background: white
+            border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             max-width: 500px;
             margin: 0 auto;
         }
@@ -136,15 +136,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .form-header h2 {
             font-weight: bold;
-            color: #667eea;
+            color: #E85D6F;
         }
 
         .user-id {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(232, 93, 111, 0.1);
             padding: 10px 15px;
             border-radius: 8px;
             text-align: center;
-            color: #667eea;
+            color: #E85D6F;
             font-size: 0.9rem;
             margin-bottom: 20px;
         }
@@ -173,8 +173,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #E85D6F;
+            box-shadow: 0 0 0 3px rgba(232, 93, 111, 0.1);
         }
 
         .error-message {
@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .btn-submit {
             flex: 1;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #E85D6F, #D94560);
             color: white;
             border: none;
             border-radius: 8px;
@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(232, 93, 111, 0.3);
         }
 
         .btn-back {
@@ -244,10 +244,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .password-note {
-            background: rgba(52, 152, 219, 0.1);
+            background: rgba(120, 183, 183, 0.15);
             padding: 12px;
             border-radius: 8px;
-            color: #3498db;
+            color: #78B7B7 ;
             font-size: 0.9rem;
             margin-bottom: 20px;
         }

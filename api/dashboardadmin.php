@@ -98,7 +98,7 @@ try {
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFE5E9 0%, #E8F5F7 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
@@ -125,12 +125,12 @@ try {
             font-size: 1.3rem;
             font-weight: bold;
             letter-spacing: 1px;
-            border-bottom: 2px solid #667eea;
+            border-bottom: 2px solid #E85D6F;
             color: #333;
         }
 
         .sidebar-header i {
-            color: #667eea;
+            color: #E85D6F;
         }
 
         .sidebar-menu {
@@ -147,16 +147,16 @@ try {
         }
 
         .sidebar-menu a:hover {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: rgba(232, 93, 111, 0.1);
+            color: #E85D6F;
+            border-left-color: #E85D6F;
             padding-left: 35px;
         }
 
         .sidebar-menu a.active {
-            background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: rgba(232, 93, 111, 0.2);
+            color: #E85D6F;
+            border-left-color: #E85D6F;
             font-weight: 600;
         }
 
@@ -201,7 +201,7 @@ try {
         .user-avatar {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #E85D6F, #D94560);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -240,19 +240,19 @@ try {
             transform: translateY(-5px);
         }
 
-        .stat-box.total { border-left-color: #667eea; }
+        .stat-box.total { border-left-color: #E85D6F; }
         .stat-box.admin { border-left-color: #e74c3c; }
-        .stat-box.user { border-left-color: #f39c12; }
+        .stat-box.user  { border-left-color: #78B7B7; }
 
         .stat-number {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #E85D6F;
             margin: 10px 0;
         }
 
         .stat-box.admin .stat-number { color: #e74c3c; }
-        .stat-box.user .stat-number { color: #f39c12; }
+        .stat-box.user .stat-number { color: #78b7b7; }
 
         .stat-label {
             color: #999;
@@ -291,12 +291,12 @@ try {
 
         .search-box input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #E85D6F;
+            box-shadow: 0 0 0 3px rgba(232, 93, 111, 0.1);
         }
 
         .btn-custom {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #E85D6F, #D94560);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -357,12 +357,12 @@ try {
         }
 
         .table thead {
-            background: rgba(102, 126, 234, 0.1);
-            border-bottom: 2px solid #667eea;
+            background: rgba(232, 93, 111, 0.1);
+            border-bottom: 2px solid #E85D6F;
         }
 
         .table thead th {
-            color: #667eea;
+            color: #E85D6F;
             font-weight: 600;
             padding: 15px;
             vertical-align: middle;
@@ -405,7 +405,7 @@ try {
         }
 
         .pagination .page-link {
-            color: #667eea;
+            color: #E85D6F;;
             border-color: #e0e0e0;
             margin: 0 3px;
             border-radius: 5px;
@@ -413,13 +413,13 @@ try {
 
         .pagination .page-link:hover {
             color: white;
-            background-color: #667eea;
-            border-color: #667eea;
+            background-color: #E85D6F;;
+            border-color: #E85D6F;;
         }
 
         .pagination .page-item.active .page-link {
-            background-color: #667eea;
-            border-color: #667eea;
+            background-color: #E85D6F;;
+            border-color: #E85D6F;;
         }
 
         .empty-state {
@@ -450,7 +450,7 @@ try {
         .loading {
             text-align: center;
             padding: 30px;
-            color: #667eea;
+            color: #E85D6F;;
         }
 
         .loading i {
