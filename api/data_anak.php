@@ -230,7 +230,7 @@ try {
             color: #E85D6F;
         }
 
-        /* === CHILD ACTIONS: 2 baris === */
+        /* === CHILD ACTIONS === */
         .child-actions {
             display: flex;
             flex-direction: column;
@@ -272,27 +272,28 @@ try {
             color: white;
         }
 
+        /* Diubah ke abu-abu netral agar tidak bertabrakan dengan tombol jadwal baru */
         .btn-delete {
-            background: #e74c3c;
+            background: #7f8c8d;
         }
 
         .btn-delete:hover {
-            background: #c0392b;
+            background: #95a5a6;
             transform: translateY(-2px);
             color: white;
         }
 
-        /* === TOMBOL JADWAL IMUNISASI === */
+        /* === WARNA BARU JADWAL IMUNISASI (LEBIH SINKRON) === */
         .btn-jadwal {
-            background: linear-gradient(135deg, #1D9E75, #0F6E56);
+            background: #E05263;
             font-size: 0.9rem;
             padding: 10px 12px;
         }
 
         .btn-jadwal:hover {
-            background: linear-gradient(135deg, #0F6E56, #085041);
+            background: #C83E4F;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(29, 158, 117, 0.3);
+            box-shadow: 0 6px 16px rgba(224, 82, 99, 0.3);
             color: white;
         }
 
@@ -377,7 +378,6 @@ try {
     </style>
 </head>
 <body>
-    <!-- NAVBAR -->
     <div class="navbar">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <div class="navbar-title">
@@ -389,14 +389,11 @@ try {
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="container">
-        <!-- BACK LINK -->
         <a href="dashboard.php" class="back-link">
             <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
         </a>
 
-        <!-- PAGE HEADER -->
         <div class="page-header">
             <h1 class="page-title">
                 <i class="fas fa-child me-2" style="color: #E85D6F;"></i>
@@ -425,7 +422,6 @@ try {
             </div>
         </div>
 
-        <!-- CHILDREN LIST -->
         <?php if (!empty($children)): ?>
             <div class="children-grid">
                 <?php foreach ($children as $child): ?>
@@ -464,7 +460,6 @@ try {
                             </div>
                         </div>
 
-                        <!-- ACTIONS: baris 1 = Edit & Hapus, baris 2 = Jadwal Imunisasi -->
                         <div class="child-actions">
                             <div class="child-actions-row">
                                 <a href="edit_anak.php?id=<?php echo $child['id']; ?>" class="btn-edit">
