@@ -230,15 +230,22 @@ try {
             color: #E85D6F;
         }
 
+        /* === CHILD ACTIONS: 2 baris === */
         .child-actions {
             display: flex;
+            flex-direction: column;
             gap: 8px;
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid #f0f0f0;
         }
 
-        .btn-edit, .btn-delete {
+        .child-actions-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit, .btn-delete, .btn-jadwal {
             flex: 1;
             padding: 8px 12px;
             border: none;
@@ -262,6 +269,7 @@ try {
         .btn-edit:hover {
             background: #2980b9;
             transform: translateY(-2px);
+            color: white;
         }
 
         .btn-delete {
@@ -271,6 +279,21 @@ try {
         .btn-delete:hover {
             background: #c0392b;
             transform: translateY(-2px);
+            color: white;
+        }
+
+        /* === TOMBOL JADWAL IMUNISASI === */
+        .btn-jadwal {
+            background: linear-gradient(135deg, #1D9E75, #0F6E56);
+            font-size: 0.9rem;
+            padding: 10px 12px;
+        }
+
+        .btn-jadwal:hover {
+            background: linear-gradient(135deg, #0F6E56, #085041);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(29, 158, 117, 0.3);
+            color: white;
         }
 
         .empty-state {
@@ -311,19 +334,6 @@ try {
         .btn-empty-add:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(232, 93, 111, 0.3);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: rgba(46, 204, 113, 0.2);
-            color: #27ae60;
         }
 
         .back-link {
@@ -453,14 +463,20 @@ try {
                                 </span>
                             </div>
                         </div>
-                        
+
+                        <!-- ACTIONS: baris 1 = Edit & Hapus, baris 2 = Jadwal Imunisasi -->
                         <div class="child-actions">
-                            <a href="edit_anak.php?id=<?php echo $child['id']; ?>" class="btn-edit">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <a href="hapus_anak.php?id=<?php echo $child['id']; ?>" class="btn-delete"
-                               onclick="return confirm('Yakin ingin menghapus data anak ini?');">
-                                <i class="fas fa-trash"></i> Hapus
+                            <div class="child-actions-row">
+                                <a href="edit_anak.php?id=<?php echo $child['id']; ?>" class="btn-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="hapus_anak.php?id=<?php echo $child['id']; ?>" class="btn-delete"
+                                   onclick="return confirm('Yakin ingin menghapus data anak ini?');">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </a>
+                            </div>
+                            <a href="jadwal_imunisasi.php?id=<?php echo $child['id']; ?>" class="btn-jadwal">
+                                <i class="fas fa-syringe"></i> Jadwal Imunisasi
                             </a>
                         </div>
                     </div>
