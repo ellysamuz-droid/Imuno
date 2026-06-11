@@ -411,28 +411,36 @@ $upcoming = count(array_filter($schedules, fn($s) => $s['scheduled_date'] && $s[
                         $status = $schedule['status'] ?? 'pending';
                         $scheduled_date = $schedule['scheduled_date'] ? new DateTime($schedule['scheduled_date']) : null;
                         
-                        if ($scheduled_date && $scheduled_date < $today) {
-                            $display_status = 'Lewat Jadwal';
-                            $status_class = 'status-pending';
-                        } elseif ($status === 'completed') {
+                        // Logika penentuan badge status
+                        if ($status === 'completed') {
                             $display_status = 'Selesai';
                             $status_class = 'status-completed';
-                        } elseif ($status === 'pending' && $scheduled_date && $scheduled_date <= $today) {
-                            $display_status = 'Segera';
-                            $status_class = 'status-upcoming';
+                        } elseif ($scheduled_date && $scheduled_date < $today) {
+                            $display_status = 'Lewat Jadwal';
+                            $status_class = 'status-pending'; // Menggunakan style kuning/merah terlewat
                         } else {
-                            $display_status = ucfirst($status);
-                            $status_class = 'status-pending';
+                            $display_status = 'Akan Datang';
+                            $status_class = 'status-upcoming';
                         }
                     ?>
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td>
-                            <strong><?php echo htmlspecialchars($schedule['name'] ?? 'N/A'); ?></strong><br>
-                            <small style="color: #999;"><?php echo htmlspecialchars($schedule['description'] ?? ''); ?></small>
+                            <?php 
+                                if($schedule['age_in_months'] == 0) {
+                                    echo "0-24 jam";
+                                } else {
+                                    echo $schedule['age_in_months'] . " Bulan";
+                                }
+                            ?>
                         </td>
-                        <td><?php echo $schedule['scheduled_date'] ? date('d M Y', strtotime($schedule['scheduled_date'])) : '-'; ?></td>
-                        <td><?php echo $schedule['age_in_months'] ? $schedule['age_in_months'] . ' bulan' : '-'; ?></td>
+                        <td>
+                            <strong><?php echo $schedule['scheduled_date'] ? date('d/m/Y', strtotime($schedule['scheduled_date'])) : '-'; ?></strong>
+                        </td>
+                        <td>
+                            <strong><?php echo htmlspecialchars($schedule['name'] ?? 'N/A'); ?></strong>
+                            <br><small style="color: #999;"><?php echo htmlspecialchars($schedule['description'] ?? ''); ?></small>
+                        </td>
                         <td>
                             <span class="status-badge <?php echo $status_class; ?>">
                                 <?php echo $display_status; ?>
@@ -441,11 +449,11 @@ $upcoming = count(array_filter($schedules, fn($s) => $s['scheduled_date'] && $s[
                         <td>
                             <?php if ($status !== 'completed'): ?>
                             <a href="catat_imunisasi.php?schedule_id=<?php echo $schedule['id']; ?>&child_id=<?php echo $child_id; ?>" 
-                               style="color: #3498db; text-decoration: none; font-weight: 600;">
+                            style="color: #3498db; text-decoration: none; font-weight: 600;">
                                 Catat ✓
                             </a>
                             <?php else: ?>
-                            <span style="color: #999;">Tercatat</span>
+                            <span style="color: #27ae60; font-weight: 600;"><i class="fas fa-check-circle"></i> Selesai</span>
                             <?php endif; ?>
                         </td>
                     </tr>
