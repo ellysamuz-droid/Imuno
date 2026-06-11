@@ -16,6 +16,7 @@ if ($child_id <= 0) {
 }
 
 // Verify child ownership
+// Verify child ownership
 try {
     $stmt = $conn->prepare("SELECT * FROM children WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $child_id, $user_id);
@@ -28,13 +29,49 @@ try {
         exit();
     }
 
-    // Get immunization schedule untuk anak ini
+    // 1. Cek apakah anak ini sudah memiliki jadwal di database
+    $check_stmt = $conn->prepare("SELECT COUNT(*) as total FROM immunization_schedules WHERE child_id = ?");
+    $check_stmt->bind_param("i", $child_id);
+    $check_stmt->execute();
+    $has_schedule = $check_stmt->get_result()->fetch_assoc()['total'];
+    $check_stmt->close();
+
+    // 2. JIKA BELUM ADA JADWAL, GENERATE OTOMATIS DI SINI
+    if ($has_schedule == 0) {
+        // Ambil semua tipe imunisasi master
+        $types_res = $conn->query("SELECT id, recommended_age_range FROM immunization_types ORDER BY id ASC");
+        
+        if ($types_res && $types_res->num_rows > 0) {
+            $insert_stmt = $conn->prepare(
+                "INSERT INTO immunization_schedules (child_id, immunization_type_id, scheduled_date, age_in_months, status) 
+                 VALUES (?, ?, ?, ?, 'pending')"
+            );
+
+            while ($type = $types_res->fetch_assoc()) {
+                $months_to_add = (int)$type['recommended_age_range'];
+                
+                // Hitung tanggal jadwal: Tanggal Lahir + X Bulan
+                $birth_date_obj = new DateTime($child['date_of_birth']);
+                if ($months_to_add > 0) {
+                    $birth_date_obj->modify("+" . $months_to_add . " month");
+                }
+                $scheduled_date = $birth_date_obj->format('Y-m-d');
+
+                // Bind dan eksekusi insert
+                $insert_stmt->bind_param("iisi", $child_id, $type['id'], $scheduled_date, $months_to_add);
+                $insert_stmt->execute();
+            }
+            $insert_stmt->close();
+        }
+    }
+
+    // 3. Ambil ulang data immunization schedule (sekarang dipastikan sudah terisi)
     $schedule_stmt = $conn->prepare(
         "SELECT ims.*, immu.name, immu.description, immu.recommended_age_range 
          FROM immunization_schedules ims
          LEFT JOIN immunization_types immu ON ims.immunization_type_id = immu.id
          WHERE ims.child_id = ?
-         ORDER BY ims.scheduled_date ASC"
+         ORDER BY ims.age_in_months ASC"
     );
     $schedule_stmt->bind_param("i", $child_id);
     $schedule_stmt->execute();
