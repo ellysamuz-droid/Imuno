@@ -108,7 +108,7 @@ try {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             flex-wrap: wrap;
             gap: 15px;
         }
@@ -117,6 +117,12 @@ try {
             font-size: 2rem;
             font-weight: bold;
             color: #333;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .btn-add {
@@ -142,7 +148,7 @@ try {
 
         .search-box {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .search-box input {
@@ -151,6 +157,7 @@ try {
             border-radius: 8px;
             width: 250px;
             transition: all 0.3s;
+            font-size: 0.95rem;
         }
 
         .search-box input:focus {
@@ -159,152 +166,219 @@ try {
             box-shadow: 0 0 0 3px rgba(232, 93, 111, 0.1);
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            padding: 30px;
-            margin-bottom: 30px;
+        .search-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .reset-btn {
+            background: #999;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .reset-btn:hover {
+            background: #777;
+            transform: translateY(-2px);
         }
 
         .children-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .child-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
             border-left: 5px solid #E85D6F;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .child-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Avatar */
+        .avatar-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         .child-avatar {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #E85D6F, #D94560);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 15px rgba(232, 93, 111, 0.2);
         }
 
         .child-name {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: capitalize;
         }
 
+        /* Info Section */
         .child-info {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #666;
+            gap: 12px;
+            margin-bottom: 25px;
+            flex-grow: 1;
         }
 
         .child-info-item {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.95rem;
         }
 
         .child-info-item i {
             width: 20px;
             color: #E85D6F;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
 
-        /* === CHILD ACTIONS === */
+        .info-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* === BUTTONS SECTION === */
         .child-actions {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: auto;
+            padding-top: 20px;
             border-top: 1px solid #f0f0f0;
         }
 
-        .child-actions-row {
-            display: flex;
+        .action-buttons-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
         }
 
-        .btn-edit, .btn-delete, .btn-jadwal {
-            flex: 1;
-            padding: 8px 12px;
+        .btn-action {
+            padding: 10px 12px;
             border: none;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 6px;
             text-decoration: none;
             color: white;
+            min-height: 42px;
         }
 
         .btn-edit {
-            background: #3498db;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            grid-column: 1;
         }
 
         .btn-edit:hover {
-            background: #2980b9;
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
             color: white;
         }
 
-        /* Diubah ke abu-abu netral agar tidak bertabrakan dengan tombol jadwal baru */
         .btn-delete {
-            background: #7f8c8d;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            grid-column: 2;
         }
 
         .btn-delete:hover {
-            background: #95a5a6;
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
             color: white;
         }
 
-        /* === WARNA BARU JADWAL IMUNISASI (LEBIH SINKRON) === */
         .btn-jadwal {
-            background: #E05263;
-            font-size: 0.9rem;
-            padding: 10px 12px;
+            background: linear-gradient(135deg, #E85D6F, #D94560);
+            grid-column: 1 / -1;
+            font-size: 0.95rem;
+            min-height: 44px;
         }
 
         .btn-jadwal:hover {
-            background: #C83E4F;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(224, 82, 99, 0.3);
+            box-shadow: 0 6px 16px rgba(232, 93, 111, 0.3);
             color: white;
+        }
+
+        /* Empty State */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            padding: 60px 30px;
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
             color: #999;
         }
 
-        .empty-state i {
-            font-size: 4rem;
+        .empty-state-icon {
+            font-size: 5rem;
             color: #ddd;
             margin-bottom: 20px;
         }
@@ -313,28 +387,34 @@ try {
             font-size: 1.5rem;
             color: #666;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .empty-state p {
             color: #999;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 1rem;
         }
 
         .btn-empty-add {
             background: linear-gradient(135deg, #E85D6F, #D94560);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px 28px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-empty-add:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(232, 93, 111, 0.3);
+            color: white;
         }
 
         .back-link {
@@ -353,10 +433,17 @@ try {
             color: #D94560;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             .page-header {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 20px;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
             }
 
             .search-box {
@@ -365,6 +452,12 @@ try {
 
             .search-box input {
                 width: 100%;
+                flex: 1;
+            }
+
+            .search-btn,
+            .reset-btn {
+                flex: 1;
             }
 
             .children-grid {
@@ -373,6 +466,11 @@ try {
 
             .page-title {
                 font-size: 1.5rem;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -399,19 +497,20 @@ try {
                 <i class="fas fa-child me-2" style="color: #E85D6F;"></i>
                 Data Anak Saya
             </h1>
-            <div style="display: flex; gap: 10px;">
-                <form method="GET" style="display: flex; gap: 10px;">
+            <div class="header-actions">
+                <form method="GET" style="display: flex; gap: 8px; width: 100%;">
                     <input 
                         type="text" 
                         name="search" 
                         placeholder="Cari nama anak..." 
                         value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>"
+                        class="search-box" style="margin: 0; width: auto; flex: 1;"
                     >
-                    <button type="submit" class="btn-add" style="padding: 10px 16px;">
+                    <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i> Cari
                     </button>
                     <?php if (!empty($_GET['search'])): ?>
-                        <a href="data_anak.php" class="btn-add" style="padding: 10px 16px; background: #999;">
+                        <a href="data_anak.php" class="reset-btn">
                             <i class="fas fa-times"></i> Reset
                         </a>
                     <?php endif; ?>
@@ -426,51 +525,78 @@ try {
             <div class="children-grid">
                 <?php foreach ($children as $child): ?>
                     <div class="child-card">
-                        <div class="child-avatar">
-                            <?php echo $child['gender'] === 'L' ? '👦' : '👧'; ?>
-                        </div>
-                        
-                        <div class="child-name"><?php echo htmlspecialchars($child['name']); ?></div>
-                        
-                        <div class="child-info">
-                            <div class="child-info-item">
-                                <i class="fas fa-birthday-cake"></i>
-                                <span><?php echo date('d M Y', strtotime($child['date_of_birth'])); ?></span>
-                            </div>
-                            <div class="child-info-item">
-                                <i class="fas fa-mars-and-venus"></i>
-                                <span><?php echo $child['gender'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></span>
-                            </div>
-                            <?php if (!empty($child['blood_type'])): ?>
-                                <div class="child-info-item">
-                                    <i class="fas fa-droplet"></i>
-                                    <span>Golongan Darah: <?php echo htmlspecialchars($child['blood_type']); ?></span>
-                                </div>
-                            <?php endif; ?>
-                            <div class="child-info-item">
-                                <i class="fas fa-calendar"></i>
-                                <span>
-                                    <?php 
-                                    $birthdate = new DateTime($child['date_of_birth']);
-                                    $today = new DateTime();
-                                    $age = $today->diff($birthdate)->y;
-                                    echo $age . ' tahun';
-                                    ?>
-                                </span>
+                        <!-- Avatar -->
+                        <div class="avatar-section">
+                            <div class="child-avatar">
+                                <?php echo $child['gender'] === 'L' ? '👦' : '👧'; ?>
                             </div>
                         </div>
 
+                        <!-- Nama -->
+                        <div class="child-name">
+                            <?php echo htmlspecialchars($child['name']); ?>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="child-info">
+                            <!-- Tanggal Lahir -->
+                            <div class="child-info-item">
+                                <i class="fas fa-birthday-cake"></i>
+                                <div class="info-text">
+                                    <span class="info-label">Tanggal Lahir</span>
+                                    <span class="info-value"><?php echo date('d M Y', strtotime($child['date_of_birth'])); ?></span>
+                                </div>
+                            </div>
+
+                            <!-- Umur -->
+                            <div class="child-info-item">
+                                <i class="fas fa-hourglass-end"></i>
+                                <div class="info-text">
+                                    <span class="info-label">Umur</span>
+                                    <span class="info-value">
+                                        <?php 
+                                        $birthdate = new DateTime($child['date_of_birth']);
+                                        $today = new DateTime();
+                                        $age = $today->diff($birthdate);
+                                        echo $age->y . ' tahun ' . $age->m . ' bulan';
+                                        ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Jenis Kelamin -->
+                            <div class="child-info-item">
+                                <i class="fas fa-mars-and-venus"></i>
+                                <div class="info-text">
+                                    <span class="info-label">Jenis Kelamin</span>
+                                    <span class="info-value"><?php echo $child['gender'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></span>
+                                </div>
+                            </div>
+
+                            <!-- Golongan Darah -->
+                            <?php if (!empty($child['blood_type'])): ?>
+                                <div class="child-info-item">
+                                    <i class="fas fa-droplet" style="color: #e74c3c;"></i>
+                                    <div class="info-text">
+                                        <span class="info-label">Golongan Darah</span>
+                                        <span class="info-value"><?php echo htmlspecialchars($child['blood_type']); ?></span>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Actions -->
                         <div class="child-actions">
-                            <div class="child-actions-row">
-                                <a href="edit_anak.php?id=<?php echo $child['id']; ?>" class="btn-edit">
+                            <div class="action-buttons-row">
+                                <a href="edit_anak.php?id=<?php echo $child['id']; ?>" class="btn-action btn-edit">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a href="hapus_anak.php?id=<?php echo $child['id']; ?>" class="btn-delete"
+                                <a href="hapus_anak.php?id=<?php echo $child['id']; ?>" class="btn-action btn-delete"
                                    onclick="return confirm('Yakin ingin menghapus data anak ini?');">
                                     <i class="fas fa-trash"></i> Hapus
                                 </a>
                             </div>
-                            <a href="jadwal_imunisasi.php?id=<?php echo $child['id']; ?>" class="btn-jadwal">
+                            <a href="jadwal_imunisasi.php?id=<?php echo $child['id']; ?>" class="btn-action btn-jadwal">
                                 <i class="fas fa-syringe"></i> Jadwal Imunisasi
                             </a>
                         </div>
@@ -481,11 +607,11 @@ try {
         <?php else: ?>
             <div class="glass-card">
                 <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
+                    <div class="empty-state-icon">👶</div>
                     <h3>Belum ada data anak</h3>
                     <p>Anda belum menambahkan data anak. Mulai dengan menambahkan profil anak Anda.</p>
                     <a href="tambah_anak.php" class="btn-empty-add">
-                        <i class="fas fa-plus-circle me-2"></i> Tambah Anak Pertama
+                        <i class="fas fa-plus-circle"></i> Tambah Anak Pertama
                     </a>
                 </div>
             </div>
