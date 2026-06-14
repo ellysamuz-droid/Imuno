@@ -1,7 +1,8 @@
 <?php
 /**
  * DASHBOARD.PHP (UPDATED)
- * Menampilkan list anak user dengan opsi add, detail, jadwal, riwayat
+ * Menampilkan list anak user dengan layout yang diperbarui
+ * Tombol: Edit, Hapus, Jadwal Imunisasi
  */
 
 require_once __DIR__ . '/config.php';
@@ -208,7 +209,7 @@ try {
         .children-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 40px;
         }
 
@@ -219,68 +220,106 @@ try {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
             border-left: 5px solid #E85D6F;
+            display: flex;
+            flex-direction: column;
         }
 
         .child-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
         }
 
+        .avatar-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
         .child-avatar {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #E85D6F, #D94560);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 15px rgba(232, 93, 111, 0.2);
         }
 
         .child-name {
             font-size: 1.3rem;
             font-weight: bold;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: capitalize;
         }
 
         .child-info {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-grow: 1;
             font-size: 0.9rem;
-            color: #666;
         }
 
         .child-info-item {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
 
         .child-info-item i {
-            width: 16px;
+            width: 18px;
             color: #E85D6F;
-            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .info-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 600;
         }
 
         .child-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 8px;
-            margin-top: 15px;
+            margin-top: auto;
             padding-top: 15px;
             border-top: 1px solid #f0f0f0;
         }
 
+        .action-buttons-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
         .btn-action {
-            padding: 8px 12px;
+            padding: 10px 12px;
             border: none;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -288,32 +327,39 @@ try {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 5px;
             color: white;
+            min-height: 40px;
         }
 
-        .btn-detail {
-            background: #3498db;
+        .btn-edit {
+            background: linear-gradient(135deg, #3498db, #2980b9);
         }
 
-        .btn-detail:hover {
-            background: #2980b9;
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.3);
         }
 
         .btn-jadwal {
-            background: #f39c12;
+            background: linear-gradient(135deg, #E85D6F, #D94560);
+            grid-column: 1 / -1;
+            font-size: 0.9rem;
+            min-height: 42px;
         }
 
         .btn-jadwal:hover {
-            background: #d68910;
-        }
-
-        .btn-riwayat {
-            background: #27ae60;
-        }
-
-        .btn-riwayat:hover {
-            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(232, 93, 111, 0.3);
         }
 
         .empty-state {
@@ -365,8 +411,12 @@ try {
                 grid-template-columns: 1fr;
             }
 
-            .child-actions {
+            .action-buttons-row {
                 grid-template-columns: 1fr;
+            }
+
+            .btn-jadwal {
+                grid-column: 1;
             }
 
             .welcome-section {
@@ -419,7 +469,7 @@ try {
         <!-- Children Section Header -->
         <div class="section-header">
             <h2 class="section-title">
-                <i class="fas fa-children"></i> Anak-Anak Saya
+                <i class="fas fa-child"></i> Anak-Anak Saya
             </h2>
             <a href="tambah_anak.php" class="btn-add-child">
                 <i class="fas fa-plus-circle"></i> Tambah Anak
@@ -432,46 +482,68 @@ try {
                 <?php foreach ($children as $child): 
                     $birthdate = new DateTime($child['date_of_birth']);
                     $today = new DateTime();
-                    $age = $today->diff($birthdate)->y;
-                    $months = $today->diff($birthdate)->m;
+                    $age = $today->diff($birthdate);
                 ?>
                     <div class="child-card">
-                        <div class="child-avatar">
-                            <?php echo $child['gender'] === 'L' ? '👦' : '👧'; ?>
+                        <!-- Avatar -->
+                        <div class="avatar-section">
+                            <div class="child-avatar">
+                                <?php echo $child['gender'] === 'L' ? '👦' : '👧'; ?>
+                            </div>
                         </div>
 
-                        <div class="child-name"><?php echo htmlspecialchars($child['name']); ?></div>
+                        <!-- Nama -->
+                        <div class="child-name">
+                            <?php echo htmlspecialchars($child['name']); ?>
+                        </div>
 
+                        <!-- Info -->
                         <div class="child-info">
                             <div class="child-info-item">
                                 <i class="fas fa-birthday-cake"></i>
-                                <span><?php echo date('d M Y', strtotime($child['date_of_birth'])); ?></span>
+                                <div class="info-text">
+                                    <span class="info-label">Tanggal Lahir</span>
+                                    <span class="info-value"><?php echo date('d M Y', strtotime($child['date_of_birth'])); ?></span>
+                                </div>
                             </div>
                             <div class="child-info-item">
-                                <i class="fas fa-hourglass-half"></i>
-                                <span><?php echo $age . ' tahun ' . $months . ' bulan'; ?></span>
+                                <i class="fas fa-hourglass-end"></i>
+                                <div class="info-text">
+                                    <span class="info-label">Umur</span>
+                                    <span class="info-value"><?php echo $age->y . ' tahun ' . $age->m . ' bulan'; ?></span>
+                                </div>
                             </div>
                             <div class="child-info-item">
                                 <i class="fas fa-mars-and-venus"></i>
-                                <span><?php echo $child['gender'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></span>
+                                <div class="info-text">
+                                    <span class="info-label">Jenis Kelamin</span>
+                                    <span class="info-value"><?php echo $child['gender'] === 'L' ? 'Laki-laki' : 'Perempuan'; ?></span>
+                                </div>
                             </div>
                             <?php if (!empty($child['blood_type'])): ?>
                                 <div class="child-info-item">
-                                    <i class="fas fa-droplet"></i>
-                                    <span><?php echo htmlspecialchars($child['blood_type']); ?></span>
+                                    <i class="fas fa-droplet" style="color: #e74c3c;"></i>
+                                    <div class="info-text">
+                                        <span class="info-label">Golongan Darah</span>
+                                        <span class="info-value"><?php echo htmlspecialchars($child['blood_type']); ?></span>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                         </div>
 
+                        <!-- Actions -->
                         <div class="child-actions">
-                            <a href="detail_anak.php?id=<?php echo $child['id']; ?>" class="btn-action btn-detail" title="Detail">
-                                <i class="fas fa-info-circle"></i> Detail
-                            </a>
-                            <a href="jadwal_imunisasi.php?id=<?php echo $child['id']; ?>" class="btn-action btn-jadwal" title="Jadwal">
-                                <i class="fas fa-calendar"></i> Jadwal
-                            </a>
-                            <a href="riwayat_imunisasi.php?id=<?php echo $child['id']; ?>" class="btn-action btn-riwayat" title="Riwayat">
-                                <i class="fas fa-history"></i> Riwayat
+                            <div class="action-buttons-row">
+                                <a href="edit_anak.php?id=<?php echo $child['id']; ?>" class="btn-action btn-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="hapus_anak.php?id=<?php echo $child['id']; ?>" class="btn-action btn-delete"
+                                   onclick="return confirm('Yakin ingin menghapus data anak ini?');">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </a>
+                            </div>
+                            <a href="jadwal_imunisasi.php?id=<?php echo $child['id']; ?>" class="btn-action btn-jadwal">
+                                <i class="fas fa-syringe"></i> Jadwal Imunisasi
                             </a>
                         </div>
                     </div>
