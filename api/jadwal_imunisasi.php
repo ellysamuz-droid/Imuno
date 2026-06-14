@@ -456,7 +456,7 @@ $upcoming = count(array_filter($schedules, fn($s) => $s['scheduled_date'] && $s[
                             <span style="color: #27ae60; font-weight: 600;"><i class="fas fa-check-circle"></i> Selesai</span>
                             <?php endif; ?>
                         </td>
-                    </tr>
+                    </tr> 
                     <?php endforeach; ?>
                 </tbody>
             </table>
