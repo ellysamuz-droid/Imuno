@@ -29,12 +29,13 @@ try {
         exit();
     }
 
-    // ✅ Ambil data dari POST
+    // ✅ Ambil data dari POST (TAMBAH whatsapp_number)
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $email = isset($_POST['email']) ? trim(strtolower($_POST['email'])) : '';
     $tanggal_lahir = isset($_POST['tanggal_lahir']) ? trim($_POST['tanggal_lahir']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $password_confirm = isset($_POST['password_confirm']) ? $_POST['password_confirm'] : '';
+    $whatsapp_number = isset($_POST['whatsapp_number']) ? trim($_POST['whatsapp_number']) : ''; // FIELD BARU
 
     // ✅ Validasi input di server (double check)
     $errors = [];
@@ -65,6 +66,13 @@ try {
 
     if ($password !== $password_confirm) {
         $errors['password_confirm'] = 'Kata sandi tidak cocok';
+    }
+
+    // ✅ Validasi WhatsApp (opsional tapi jika ada harus format benar) - VALIDASI BARU
+    if (!empty($whatsapp_number)) {
+        if (!preg_match('/^\+\d{10,15}$/', $whatsapp_number)) {
+            $errors['whatsapp_number'] = 'Format nomor WhatsApp tidak valid. Gunakan format: +62812345678';
+        }
     }
 
     // ✅ Jika ada error validasi, kirim langsung
@@ -109,17 +117,18 @@ try {
     // ✅ Hash password dengan bcrypt (lebih aman)
     $hashed_password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
 
-    // ✅ Insert ke database
+    // ✅ Insert ke database (UPDATED dengan whatsapp_number)
     $stmt = $conn->prepare(
-        "INSERT INTO users (username, email, tanggal_lahir, password, created_at, updated_at) 
-         VALUES (?, ?, ?, ?, NOW(), NOW())"
+        "INSERT INTO users (username, email, tanggal_lahir, password, whatsapp_number, created_at, updated_at) 
+         VALUES (?, ?, ?, ?, ?, NOW(), NOW())"
     );
 
     if (!$stmt) {
         throw new Exception('Prepare insert statement gagal: ' . $conn->error);
     }
 
-    $stmt->bind_param("ssss", $username, $email, $tanggal_lahir, $hashed_password);
+    // UPDATED: tambah parameter untuk whatsapp_number
+    $stmt->bind_param("sssss", $username, $email, $tanggal_lahir, $hashed_password, $whatsapp_number);
 
     if (!$stmt->execute()) {
         // Cek error spesifik dari database
@@ -130,6 +139,13 @@ try {
     // ✅ Ambil ID yang baru diinsert
     $user_id = $stmt->insert_id;
     $stmt->close();
+
+    // ✅ Log registrasi (TAMBAH log untuk WhatsApp)
+    $log_msg = "User registered - ID: {$user_id}, Email: {$email}, Username: {$username}";
+    if (!empty($whatsapp_number)) {
+        $log_msg .= ", WhatsApp: {$whatsapp_number}";
+    }
+    error_log($log_msg);
 
     // ✅ Success response
     http_response_code(201); // Created

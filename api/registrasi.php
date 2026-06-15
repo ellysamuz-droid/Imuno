@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar - Reminder Imunisasi</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -97,7 +98,7 @@
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
-            width: 33%;
+            width: 40%;
             transition: width 0.3s ease;
             border-radius: 2px;
         }
@@ -118,6 +119,12 @@
 
         .required {
             color: var(--error);
+        }
+
+        .optional {
+            color: #999;
+            font-weight: 400;
+            font-size: 12px;
         }
 
         .form-group input,
@@ -188,6 +195,23 @@
 
         .error-text.show {
             display: block;
+        }
+
+        .whatsapp-info {
+            background: rgba(37, 211, 102, 0.1);
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            border-left: 3px solid #25d366;
+            color: #25d366;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .whatsapp-info i {
+            font-size: 14px;
         }
 
         .terms-agreement {
@@ -424,6 +448,24 @@
                     <div class="error-text" id="confirmError"></div>
                 </div>
 
+                <div class="form-group">
+                    <label for="whatsapp_number">
+                        <i class="fab fa-whatsapp"></i> Nomor WhatsApp
+                        <span class="optional">(Opsional)</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="whatsapp_number" 
+                        name="whatsapp_number"
+                        placeholder="+62812345678"
+                    >
+                    <div class="whatsapp-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Dapatkan reminder imunisasi anak Anda di WhatsApp!</span>
+                    </div>
+                    <div class="error-text" id="whatsappError"></div>
+                </div>
+
                 <div class="terms-agreement">
                     <label>
                         <input type="checkbox" name="agree_terms" required>
@@ -440,10 +482,12 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
         const form = document.getElementById('registerForm');
         const passwordInput = document.getElementById('password');
         const confirmInput = document.getElementById('password_confirm');
+        const whatsappInput = document.getElementById('whatsapp_number');
         const strengthIndicator = document.getElementById('strengthIndicator');
         const alertMessage = document.getElementById('alertMessage');
         const submitBtn = document.getElementById('submitBtn');
@@ -457,6 +501,16 @@
 
         confirmInput.addEventListener('input', function() {
             validatePasswordMatch();
+        });
+
+        // WhatsApp validation on change
+        whatsappInput.addEventListener('change', function() {
+            if (this.value && !isValidWhatsApp(this.value)) {
+                showError('whatsapp', 'Format nomor WhatsApp tidak valid. Gunakan format: +62812345678');
+            } else {
+                document.getElementById('whatsappError').classList.remove('show');
+                whatsappInput.classList.remove('input-error');
+            }
         });
 
         function checkPasswordStrength(password) {
@@ -494,6 +548,11 @@
                 confirmError.classList.remove('show');
                 return true;
             }
+        }
+
+        function isValidWhatsApp(phone) {
+            // Format: +62812345678 (10-15 digits, starts with +)
+            return /^\+\d{10,15}$/.test(phone);
         }
 
         // Form validation with AJAX
@@ -548,6 +607,13 @@
                 isValid = false;
             }
 
+            // Validate WhatsApp (optional but if provided, must be valid)
+            const whatsapp = whatsappInput.value.trim();
+            if (whatsapp && !isValidWhatsApp(whatsapp)) {
+                showError('whatsapp', 'Format nomor WhatsApp tidak valid. Gunakan: +62812345678');
+                isValid = false;
+            }
+
             // Validate terms
             if (!document.querySelector('input[name="agree_terms"]').checked) {
                 showAlert('Anda harus menyetujui syarat dan ketentuan', 'error');
@@ -570,6 +636,7 @@
                 formData.append('tanggal_lahir', date);
                 formData.append('password', password);
                 formData.append('password_confirm', confirmInput.value);
+                formData.append('whatsapp_number', whatsapp);
 
                 // Send to server
                 const response = await fetch('prosesregistrasi.php', {
@@ -583,7 +650,7 @@
                     // Show success message
                     showAlert('Pendaftaran berhasil! Anda akan diarahkan ke login...', 'success');
                     
-                    // Redirect ke dashboard setelah 1.5 detik
+                    // Redirect ke login setelah 1.5 detik
                     setTimeout(() => {
                         window.location.href = 'login.php';
                     }, 1500);
@@ -612,9 +679,11 @@
         function showError(fieldId, message) {
             const errorElement = document.getElementById(fieldId + 'Error');
             const inputElement = document.getElementById(fieldId);
-            errorElement.textContent = message;
-            errorElement.classList.add('show');
-            inputElement.classList.add('input-error');
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+                inputElement.classList.add('input-error');
+            }
         }
 
         function clearErrors() {
